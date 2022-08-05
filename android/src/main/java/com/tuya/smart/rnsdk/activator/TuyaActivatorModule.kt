@@ -65,6 +65,9 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   fun initBluetoothDualModeActivator(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD), params)) {
 
+      /*  avoid For compile error
+      Error Msg: 'let((T) -> R): R' is only available since Kotlin 1.3.50 and cannot be used in Kotlin 1.3
+
       TuyaHomeSdk.getBleOperator().startLeScan(60000, ScanType.SINGLE
       ) { bean ->
         params.getDouble(HOMEID).toLong().let {
@@ -104,6 +107,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
             })
         }
       };
+      */
     }
   }
 
@@ -121,6 +125,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
     try {
       currentActivity.startActivity(Intent(Settings.ACTION_SETTINGS))
     } catch (e: Exception) {
+    }
   }
 
   @ReactMethod
@@ -140,7 +145,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
         override fun onFailure(s: String, s1: String) {
           promise.reject(s, s1)
         }
-      }
+      })
     }
   }
 
@@ -234,44 +239,6 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
      * 하위 장치가 네트워크 구성 상태인 경우에만 시작할 수 있습니다.
      */
     @ReactMethod
-    fun newGwSubDevActivator(params: ReadableMap,promise: Promise) {
-      if (ReactParamsCheck.checkParams(arrayOf(DEVID, TIME), params)){
-        val builder = TuyaGwSubDevActivatorBuilder()
-          //게이트웨이 ID 설정
-          .setDevId(params.getString(DEVID))
-          //네트워크 시간 초과 설정
-          .setTimeOut(params.getInt(TIME).toLong())
-          .setListener(object : ITuyaSmartActivatorListener {
-            override fun onError(var1: String, var2: String) {
-              promise.reject(var1,var2)
-            }
-
-            /**
-              * 장치가 성공적으로 네트워크에 연결되어 있고 장치가 온라인 상태이면(전화를 직접 제어할 수 있음) 다음을 사용할 수 있습니다.
-              */
-            override fun onActiveSuccess(var1: DeviceBean) {
-              promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-            }
-
-            /**
-              * device_find 기기 검색
-              * device_bind_success 장치가 성공적으로 바인딩되었지만 아직 온라인 상태가 아닙니다. 현재 장치가 오프라인 상태이므로 제어할 수 없습니다.
-              */
-            override fun onStep(var1: String, var2: Any) {
-              promise.reject(var1,"")
-            }
-          })
-
-        mTuyaGWActivator = TuyaHomeSdk.getActivatorInstance().newGwSubDevActivator(builder)
-        mTuyaGWActivator?.start()
-      }
-    }
-
-    /**
-     * ZigBee 하위 장치 네트워크 구성은 ZigBee 게이트웨이 장치 클라우드가 온라인 상태이고 
-     * 하위 장치가 네트워크 구성 상태인 경우에만 시작할 수 있습니다.
-     */
-    @ReactMethod
     fun StartGwSubDevActivator(params: ReadableMap, promise: Promise) {
       var ErrorOccur :Boolean = true
       if (ReactParamsCheck.checkParams(arrayOf(DEVID, TIME), params)){
@@ -316,29 +283,27 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
           mTuyaGWActivator = TuyaHomeSdk.getActivatorInstance().newGwSubDevActivator(builder)
           mTuyaGWActivator?.start()
           ErrorOccur = false
-        }
+      }
 
-        if( ErrorOccur ) {
-            promise.reject("NG")
-        }
-        else {
-            promise.resolve("OK")
-        }
-      })
+      if( ErrorOccur ) {
+          promise.reject("NG")
+      }
+      else {
+          promise.resolve("OK")
+      }
     }
 
-  }
-
-  /**
-   * ZigBee子设备配网需要ZigBee网关设备云在线的情况下才能发起,且子设备处于配网状态。
-   */
+   /**
+     * ZigBee 하위 장치 네트워크 구성은 ZigBee 게이트웨이 장치 클라우드가 온라인 상태이고 
+     * 하위 장치가 네트워크 구성 상태인 경우에만 시작할 수 있습니다.
+     */
   @ReactMethod
   fun newGwSubDevActivator(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(DEVID, TIME), params)) {
       val builder = TuyaGwSubDevActivatorBuilder()
-        //设置网关ID
+        //게이트웨이 ID 설정
         .setDevId(params.getString(DEVID))
-        //设置配网超时时间
+        //네트워크 시간 초과 설정
         .setTimeOut(params.getInt(TIME).toLong())
         .setListener(object : ITuyaSmartActivatorListener {
           override fun onError(var1: String, var2: String) {
@@ -346,22 +311,23 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
           }
 
           /**
-           * 设备配网成功,且设备上线（手机可以直接控制），可以通过
-           */
+            * 장치가 성공적으로 네트워크에 연결되어 있고 장치가 온라인 상태이면(전화를 직접 제어할 수 있음) 다음을 사용할 수 있습니다.
+            */
           override fun onActiveSuccess(var1: DeviceBean) {
             promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
           }
 
           /**
-           * device_find 发现设备
-          device_bind_success 设备绑定成功，但还未上线，此时设备处于离线状态，无法控制设备。
-           */
+            * device_find 기기 검색
+            * device_bind_success 장치가 성공적으로 바인딩되었지만 아직 온라인 상태가 아닙니다. 현재 장치가 오프라인 상태이므로 제어할 수 없습니다.
+            */
           override fun onStep(var1: String, var2: Any) {
-            // promise.reject(var1,"")
+            promise.reject(var1,"")
           }
         })
 
       mTuyaGWActivator = TuyaHomeSdk.getActivatorInstance().newGwSubDevActivator(builder)
+      mTuyaGWActivator?.start()
     }
   }
 
