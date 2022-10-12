@@ -81,6 +81,76 @@ RCT_EXPORT_METHOD(initActivator:(NSDictionary *)params resolver:(RCTPromiseResol
   }];
 }
 
+RCT_EXPORT_METHOD(initWifiEzDeviceActivator:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+  
+  NSNumber *homeId = params[kTuyaRNActivatorModuleHomeId];
+  NSString *ssid = params[kTuyaRNActivatorModuleSSID];
+  NSString *password = params[kTuyaRNActivatorModulePassword];
+  NSNumber *time = params[kTuyaRNActivatorModuleOverTime];
+  
+  TYActivatorMode mode =  TYActivatorModeEZ;
+  mode = TYActivatorModeEZ;
+  
+  if (activatorInstance == nil) {
+    activatorInstance = [TuyaRNActivatorModule new];
+  }
+  
+  [TuyaSmartActivator sharedInstance].delegate = activatorInstance;
+  activatorInstance.promiseResolveBlock = resolver;
+  activatorInstance.promiseRejectBlock = rejecter;
+  
+  [[TuyaSmartActivator sharedInstance] getTokenWithHomeId:homeId.longLongValue success:^(NSString *result) {
+    //开始配置网络：
+    [[TuyaSmartActivator sharedInstance] startConfigWiFi:mode ssid:ssid password:password token:result timeout:time.doubleValue];
+  } failure:^(NSError *error) {
+    [TuyaRNUtils rejecterWithError:error handler:rejecter];
+  }];
+}
+
+RCT_EXPORT_METHOD(getTokenForActivator:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+  
+  NSNumber *homeId = params[kTuyaRNActivatorModuleHomeId];
+
+  if (activatorInstance == nil) {
+    activatorInstance = [TuyaRNActivatorModule new];
+  }
+  
+  [TuyaSmartActivator sharedInstance].delegate = activatorInstance;
+  activatorInstance.promiseResolveBlock = resolver;
+  activatorInstance.promiseRejectBlock = rejecter;
+
+  [[TuyaSmartActivator sharedInstance] getTokenWithHomeId:homeId.longLongValue success:^(NSString *result) {
+    // resolver with result
+    if (resolver) {
+      resolver(result);
+    }
+  } failure:^(NSError *error) {
+    [TuyaRNUtils rejecterWithError:error handler:rejecter];
+  }];
+}
+
+RCT_EXPORT_METHOD(initWifiApDeviceActivator:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+  
+  NSNumber *homeId = params[kTuyaRNActivatorModuleHomeId];
+  NSString *ssid = params[kTuyaRNActivatorModuleSSID];
+  NSString *password = params[kTuyaRNActivatorModulePassword];
+  NSNumber *time = params[kTuyaRNActivatorModuleOverTime];
+  NSString *token = params[kTuyaRNActivatorModuleAcccessToken];
+  
+  TuyaSmartActivatorNotificationFindGatewayDevice;
+
+  if (activatorInstance == nil) {
+    activatorInstance = [TuyaRNActivatorModule new];
+  }
+  
+  [TuyaSmartActivator sharedInstance].delegate = activatorInstance;
+  activatorInstance.promiseResolveBlock = resolver;
+  activatorInstance.promiseRejectBlock = rejecter;
+  
+  [[TuyaSmartActivator sharedInstance] startConfigWiFi:TYActivatorModeAP ssid:ssid password:password token:token timeout:time.doubleValue];
+}
+
+
 RCT_EXPORT_METHOD(initWiredGwActivator:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
   
   NSNumber *homeId = params[kTuyaRNActivatorModuleHomeId];
