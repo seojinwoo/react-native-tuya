@@ -1,58 +1,59 @@
 {
-  "version": "1.0.8",
-  "license": "MIT",
-  "main": "src/index.ts",
-  "typings": "dist/index.d.ts",
-  "keywords": [
-    "react-native",
-    "tuyasmart",
-    "iot",
-    "tuya"
-  ],
-  "files": [
-    "android",
-    "ios",
-    "dist",
-    "RNTuyaSdk.podspec",
-    "src"
-  ],
-  "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build",
-    "deploy": "npm publish --registry https://registry.npmjs.org/"
-  },
-  "peerDependencies": {
-    "react-native": ">=0.61.5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "@seojw/react-native-tuya",
-  "description": "React Native bindings for the Tuya SDK",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/seojinwoo/react-native-tuya"
-  },
-  "homepage": "https://github.com/seojinwoo/react-native-tuya#readme",
-  "author": "zigbang",
-  "module": "dist/react-native-tuya.esm.js",
-  "devDependencies": {
-    "@types/jest": "^25.1.2",
-    "@types/react-native": "0.64.14",
-    "@volst/eslint-config": "^4.1.1",
-    "husky": "^4.2.3",
-    "react-native": "0.66.1",
-    "tsdx": "^0.12.3",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+	"version": "1.0.9-alpha.1",
+	"license": "MIT",
+	"main": "src/index.ts",
+	"typings": "dist/index.d.ts",
+	"keywords": [
+	  "react-native",
+	  "tuyasmart",
+	  "iot",
+	  "tuya"
+	],
+	"files": [
+	  "android",
+	  "ios",
+	  "dist",
+	  "RNTuyaSdk.podspec",
+	  "src"
+	],
+	"scripts": {
+	  "start": "tsdx watch",
+	  "build": "tsdx build",
+	  "test": "tsdx test",
+	  "lint": "tsdx lint",
+	  "prepare": "tsdx build",
+	  "deploy": "npm publish --registry https://registry.npmjs.org/"
+	},
+	"peerDependencies": {
+	  "react-native": ">=0.66.5"
+	},
+	"husky": {
+	  "hooks": {
+		"pre-commit": "tsdx lint"
+	  }
+	},
+	"prettier": {
+	  "singleQuote": true,
+	  "trailingComma": "es5"
+	},
+	"name": "@seojw/react-native-tuya",
+	"description": "React Native bindings for the Tuya SDK",
+	"repository": {
+	  "type": "git",
+	  "url": "https://github.com/seojinwoo/react-native-tuya"
+	},
+	"homepage": "https://github.com/seojinwoo/react-native-tuya#readme",
+	"author": "zigbang",
+	"module": "dist/react-native-tuya.esm.js",
+	"devDependencies": {
+	  "@types/jest": "^25.1.2",
+	  "@types/react-native": "0.64.14",
+	  "@volst/eslint-config": "^4.1.1",
+	  "husky": "^4.2.3",
+	  "react-native": "0.66.1",
+	  "tsdx": "^0.12.3",
+	  "tslib": "^1.10.0",
+	  "typescript": "^3.7.5"
+	}
   }
-}
+  
