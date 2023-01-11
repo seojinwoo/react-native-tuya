@@ -47,7 +47,7 @@
 	"module": "dist/react-native-tuya.esm.js",
 	"devDependencies": {
 		"@types/jest": "^25.1.2",
-		"@types/react-native": "0.64.14",
+		"@types/react-native": "^0.64.14",
 		"@volst/eslint-config": "^4.1.1",
 		"husky": "^4.2.3",
 		"react-native": "0.66.5",
