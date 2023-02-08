@@ -162,3 +162,7 @@ The package is optimized and bundled with Rollup into multiple formats (CommonJS
 
 Before running this command, assigning version is needed.
 Run this command to deploy the package to npm. It will publish the package to npm.
+
+### 'yarn deploy-alpha'
+
+It is similar with 'yarn deploy'. But I will publish the package to npm with tag
